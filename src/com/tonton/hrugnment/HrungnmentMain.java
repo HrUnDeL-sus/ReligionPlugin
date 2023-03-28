@@ -13,6 +13,8 @@ public class HrungnmentMain extends JavaPlugin {
 		
 		if(cmd.getName().equalsIgnoreCase("religion")){ 
 			Player pl=(Player)sender;
+			if(args.length==0)
+				return true;
 				switch(args[0]) {
 				case"change":
 					try {

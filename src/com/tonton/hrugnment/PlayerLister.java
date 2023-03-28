@@ -30,10 +30,7 @@ public class PlayerLister implements Listener  {
 			_sendMaterial.add(Material.DIAMOND_BLOCK);
 			_sendMaterial.add(Material.GOLD_BLOCK);
 		}
-	    @EventHandler
-	    public void OnExit(PlayerQuitEvent event) {
-	    }
-	  
+
 	    public int CountNearestPlayers(Player pl) {
 	    	int count=0;
 	    	List<Entity> near = pl.getNearbyEntities(10.0D, 10.0D, 10.0D);
@@ -47,9 +44,17 @@ public class PlayerLister implements Listener  {
     		}
     		return count;
 	    }
+	    public void RemoveArrows(Player pl) {
+	    	for(ItemStack item:pl.getInventory().getContents()) {
+	    		
+	    		   if (item!=null&&item.getType() == Material.ARROW)
+	    			   pl.getInventory().remove(item);
+	    	}
+	    }
 	    public int CountItemInInventory(Material get,Player pl) {
 	    int amount=0;
 	    	for(ItemStack item:pl.getInventory().getContents()) {
+	    		
 	    		   if (item!=null&&item.getType() == get)
 	    		    	amount += item.getAmount();
 	    	}
@@ -82,6 +87,8 @@ public class PlayerLister implements Listener  {
 	    		break;
 	    	case com:
 	    		int count=CountNearestPlayers(pl);
+	    		if(count!=1)
+	    			RemoveArrows(pl);
 	    		if(count!=0) {
 	    			
 	    			pl.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,200,count));
