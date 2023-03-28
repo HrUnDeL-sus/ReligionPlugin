@@ -1,0 +1,8 @@
+name: Hrungnment
+main: com.tonton.hrugnment.HrungnmentMain
+version: 1.0.0
+commands:
+   religion:
+      description: ПАРТИИ
+      permission: 
+      usage: /<command> 
