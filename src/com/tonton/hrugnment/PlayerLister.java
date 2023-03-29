@@ -87,7 +87,7 @@ public class PlayerLister implements Listener  {
 	            	
 	            }
 	            if(rel!=null&&rel.GetType()==ReligionType.tar) {
-	                    Arrow a = Bukkit.getWorld("world").spawnArrow(s.getEyeLocation().add(s.getEyeLocation().getDirection().getX() * 1.5, 0, s.getEyeLocation().getDirection().getZ() * 1.5), new Vector(0,0,0), 1, 0);
+	                    Arrow a = s.getWorld().spawnArrow(s.getEyeLocation().add(s.getEyeLocation().getDirection().getX() * 1.5, 0, s.getEyeLocation().getDirection().getZ() * 1.5), new Vector(0,0,0), 1, 0);
 	                    a.setVelocity(s.getEyeLocation().getDirection().multiply(2.0D));
 	            }
 	            }
