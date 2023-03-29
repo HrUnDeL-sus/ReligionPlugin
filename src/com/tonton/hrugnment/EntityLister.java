@@ -3,12 +3,17 @@ package com.tonton.hrugnment;
 import java.util.Random;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -26,6 +31,29 @@ public void OnEntityDamage(EntityDamageEvent event) {
 			rel.Repent();
 		}
 	}
+}
+public int CountItemInInventory(Material get,Player pl) {
+int amount=0;
+	for(ItemStack item:pl.getInventory().getContents()) {
+		
+		   if (item!=null&&item.getType() == get)
+		    	amount += item.getAmount();
+	}
+	return amount;
+}
+
+@EventHandler
+public void ProjectileHit(ProjectileHitEvent event){
+    if (event.getEntity() instanceof Arrow){
+        Arrow arrow = (Arrow) event.getEntity();
+        if(arrow.getShooter() instanceof Player) {
+        	Player pl =(Player)arrow.getShooter();
+        	Religion rel=ReligionManager.Init().GetReligion(pl);
+        	if(rel!=null&&rel.GetType()==ReligionType.tar)
+        		 arrow.remove();
+        }
+       
+    }
 }
 @EventHandler
 public void OnEntityDie(EntityDeathEvent event) {
