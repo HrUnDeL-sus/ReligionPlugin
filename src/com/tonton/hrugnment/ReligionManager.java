@@ -25,6 +25,7 @@ public static ReligionManager Init() {
 }
 public ReligionManager() {
 	String path="";
+
 	String pathMain=ReligionManager.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 	
 	for(int i=0;i<pathMain.split("/").length-1;i+=1) {
@@ -44,7 +45,8 @@ public ReligionManager() {
 		_mainFile.createNewFile();
 	} catch (IOException e) {
 		// TODO Auto-generated catch block
-		e.printStackTrace();
+	
+		System.out.println(e.getMessage());
 	}
 }
 public int GetIndexReligion(Player pl) {
@@ -70,11 +72,19 @@ public void Load() {
 		e.printStackTrace();
 	}
 }
+public void ReloadFile() {
+	_mainFile.delete();
+	try {
+		_mainFile.createNewFile();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
 public void Save() {
 	try {
 		
-		_mainFile.delete();
-		_mainFile.createNewFile();
+		ReloadFile();
 		for(Religion religion:_religions) {
 			
 			String st=religion.GetNamePlayer()+":"+religion.GetType().toString()+":"+religion.GetPerentance()+"\n";
@@ -83,7 +93,7 @@ public void Save() {
 		}
 	} catch (IOException e) {
 		// TODO Auto-generated catch block
-		e.printStackTrace();
+		System.out.println(e.getMessage());
 	}
 }
 public Religion GetReligion(Player pl) {
@@ -101,8 +111,8 @@ public Religion GetReligion(Player pl) {
 }
 public String ReligionTypeToNormalString(ReligionType rel) {
 	switch(rel) {
-	case can:
-		return "Каннибалист";
+	case vam:
+		return "Вампир";
 	case com:
 		return "Коммунист";
 	case mol:
@@ -111,6 +121,8 @@ public String ReligionTypeToNormalString(ReligionType rel) {
 		return "Татарист";
 	case naz:
 		return "Нацист";
+	case sub:
+		return "Рыба";
 	default:
 		return "Лохист";
 	}

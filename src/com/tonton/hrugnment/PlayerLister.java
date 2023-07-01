@@ -8,6 +8,7 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -41,13 +42,15 @@ public class PlayerLister implements Listener  {
 			_sendMaterial.add(Material.GOLD_BLOCK);
 		}
 
-	    public int CountNearestPlayers(Player pl) {
+	    public int CountNearestPlayers(Player pl,ReligionType t,int max) {
 	    	int count=0;
 	    	List<Entity> near = pl.getNearbyEntities(10.0D, 10.0D, 10.0D);
     		for(Entity entity : near) {
     		    if(entity instanceof Player) {
-    		    	count+=1;
-    		    	if(count==3)
+    		    	 Religion rel=ReligionManager.Init().GetReligion((Player)entity);
+    		    	 if(rel.GetType()==t&&((Player)entity)!=pl)
+    		    		 count+=1;
+    		    	if(count==max)
     		    		return count;
     		        //do stuff here
     		    }
@@ -76,7 +79,7 @@ public class PlayerLister implements Listener  {
 	            Religion rel=ReligionManager.Init().GetReligion(s);
 	            TimerPlayer get=TimerPlayerManager.Get().GetTimer(s);
 	            if(get==null) {
-	            	TimerPlayerManager.Get().CreateTimer(new TimerPlayer(s,200));
+	            	TimerPlayerManager.Get().CreateTimer(new TimerPlayer(s,700));
 	            	get=TimerPlayerManager.Get().GetTimer(s);
 	            }
 	            if(!get.EndTimer())
@@ -101,6 +104,41 @@ public class PlayerLister implements Listener  {
 	    	if(rel==null)
 	    		return;
 	    	switch(rel.GetType()) {
+	    	case vam:
+	    		if(pl.getWorld().getName().equals("world")==false) {
+	    			pl.setFireTicks(100);
+	    			return;
+	    		}
+	    		Location l=pl.getLocation();
+	    		for(int y=l.getBlockY()+1;y<256;y+=1) {
+	    			Block getBlock=l.getWorld().getBlockAt(new Location(l.getWorld(), l.getX(),y,(double)l.getZ()));
+	    			if(getBlock.getType()!=Material.AIR) {
+	    				pl.setFireTicks(0);
+	    				return;
+	    			}
+	    		}
+	    		
+	    		if(pl.getWorld().getTime()<13000)
+	    		pl.setFireTicks(100);
+	    		else
+	    			pl.setFireTicks(0);
+	    		break;
+	    	case naz:
+	    		pl.addPotionEffect(new PotionEffect(PotionEffectType.SLOW,200,1));
+	    		break;
+	    	case sub:
+	    		Block b=pl.getWorld().getBlockAt(pl.getLocation());
+	    		if(b.getType()==Material.WATER) {
+	    			pl.removePotionEffect(PotionEffectType.WITHER);
+	    			
+	    			pl.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING,10000,100));
+	    			pl.addPotionEffect(new PotionEffect(PotionEffectType.DOLPHINS_GRACE,10000,0));
+	    		}else {
+	    			pl.removePotionEffect(PotionEffectType.WATER_BREATHING);
+	    			pl.removePotionEffect(PotionEffectType.DOLPHINS_GRACE);
+	    			pl.addPotionEffect(new PotionEffect(PotionEffectType.WITHER,200,100));
+	    		}
+	    		break;
 	    	case mol:
 	    		
 	    		if(pl.getLocation().getY()>40) {
@@ -113,15 +151,12 @@ public class PlayerLister implements Listener  {
 	    		}
 	    		break;
 	    	case tar:
-	    	
-	    	
-               
 	    		pl.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,200,1));
 	    		break;
 	    	case com:
-	    		int count=CountNearestPlayers(pl);
+	    		int count=CountNearestPlayers(pl,ReligionType.com,3);
 	    		if(count!=0) {
-	    			
+	    			System.out.println("COUNT:"+count);
 	    			pl.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,200,count));
 	    			pl.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING,200,count));
 	    		}
@@ -143,11 +178,7 @@ public class PlayerLister implements Listener  {
 	    	Religion rel=ReligionManager.Init().GetReligion(pl);
 	    	if(rel==null)
 	    		return;
-	    	if(event.getItem().getType()==Material.ROTTEN_FLESH&&rel.GetType()==ReligionType.can) {
-	    		event.setCancelled(true);
-	    		pl.getItemInHand().setAmount(pl.getItemInHand().getAmount()-1);
-	    		pl.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION,60,2));
-	    	}
+	    	
 	    }
 		@EventHandler
 		  public void onPlayerChat(PlayerChatEvent event) {

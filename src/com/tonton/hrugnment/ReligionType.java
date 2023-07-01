@@ -1,11 +1,12 @@
 package com.tonton.hrugnment;
 
 public enum ReligionType {
-	can,
+	vam,
 	com,
 	naz,
 	mol,
 	tar,
+	sub,
 	nil
 
 }

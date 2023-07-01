@@ -9,8 +9,8 @@ public class Religion {
 private ReligionType _religion;
 private Player _player;
 private OfflinePlayer _playerOffline;
-private int _repentance=20;
-private final int _repentanceMax=20;
+private int _repentance=10;
+private final int _repentanceMax=10;
 private boolean _isRepented=false;
 public int GetPerentance() {
 	return _repentance;
@@ -39,7 +39,8 @@ public ReligionType GetType() {
 public void Update() {
 	
 	_player.removePotionEffect(PotionEffectType.SPEED);
-
+	_player.removePotionEffect(PotionEffectType.WATER_BREATHING);
+	_player.removePotionEffect(PotionEffectType.DOLPHINS_GRACE);
 	
 	switch(_religion) {
 	case tar:

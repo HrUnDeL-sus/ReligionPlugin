@@ -1,13 +1,13 @@
 package com.tonton.hrugnment;
 
 import java.util.Random;
-
-import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -18,10 +18,27 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
+import org.bukkit.Material;
+
 
 public class EntityLister implements Listener {
 	
 private	Random _randomGenerator = new Random();
+@EventHandler
+public void OnEntityDamageByEntity(EntityDamageByEntityEvent event) {
+	Entity damagerEntity=event.getDamager();
+	
+	if(damagerEntity instanceof Player) {
+		Player damager=(Player)damagerEntity;
+		Religion rel=ReligionManager.Init().GetReligion(damager);
+		if(rel!=null&&rel.GetType()==ReligionType.vam) {
+			double newHealth= (damager.getHealth()+ ((int)(event.getDamage())*0.8));
+			if(newHealth<damager.getMaxHealth())
+			damager.setHealth(newHealth);
+			
+		}
+	}
+}
 @EventHandler
 public void OnEntityDamage(EntityDamageEvent event) {
 	if(event.getEntity() instanceof Player) {
@@ -67,12 +84,6 @@ public void OnEntityDie(EntityDeathEvent event) {
 		if(pl==null||rel==null)
 			return;
 	switch(rel.GetType()) {
-	case can:
-		if(_randomGenerator.nextInt(0,100)>90)
-				pl.getWorld().dropItemNaturally(event.getEntity().getLocation(), new ItemStack(Material.ROTTEN_FLESH));
-		
-		
-		break;
 	case naz:
 		if(_randomGenerator.nextInt(0,100)>50) {
 			
