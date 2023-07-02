@@ -3,6 +3,6 @@ main: com.tonton.hrugnment.HrungnmentMain
 version: 2.0.0
 commands:
    religion:
-      description:Религии
+      description: РЕЛИГИИ
       permission: 
-      usage: /<command> 
+      usage: /<command>
